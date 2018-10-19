@@ -12,19 +12,19 @@ import (
 
 var base = "http://2captcha.com"
 
-type captcha struct {
+type Captcha struct {
 	key    string // api key
 	client http.Client
 }
 
-func New(key string) *captcha {
-	return &captcha{
+func New(key string) Captcha {
+	return Captcha{
 		key:    key,
 		client: *http.DefaultClient,
 	}
 }
 
-func (c *captcha) Solve(recaptcha, origin string, invisible bool) (string, error) {
+func (c *Captcha) Solve(recaptcha, origin string, invisible bool) (string, error) {
 	id, err := c.submit(recaptcha, origin, invisible)
 	if err != nil {
 		return "", err
@@ -38,7 +38,7 @@ func (c *captcha) Solve(recaptcha, origin string, invisible bool) (string, error
 	return resp, nil
 }
 
-func (c *captcha) submit(recaptcha, origin string, invisible bool) (string, error) {
+func (c *Captcha) submit(recaptcha, origin string, invisible bool) (string, error) {
 	var invisibleBit uint8
 	if invisible {
 		invisibleBit = 1
@@ -87,7 +87,7 @@ func (c *captcha) submit(recaptcha, origin string, invisible bool) (string, erro
 	return "", errors.New(body)
 }
 
-func (c *captcha) fetch(id string) (string, error) {
+func (c *Captcha) fetch(id string) (string, error) {
 	time.Sleep(5 * time.Second)
 
 	data := url.Values{}
