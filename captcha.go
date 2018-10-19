@@ -24,8 +24,8 @@ func New(key string) *captcha {
 	}
 }
 
-func (c *captcha) Solve(origin, recaptcha string, invisible bool) (string, error) {
-	id, err := c.submit(origin, recaptcha, invisible)
+func (c *captcha) Solve(recaptcha, origin string, invisible bool) (string, error) {
+	id, err := c.submit(recaptcha, origin, invisible)
 	if err != nil {
 		return "", err
 	}
@@ -38,7 +38,7 @@ func (c *captcha) Solve(origin, recaptcha string, invisible bool) (string, error
 	return resp, nil
 }
 
-func (c *captcha) submit(origin, recaptcha string, invisible bool) (string, error) {
+func (c *captcha) submit(recaptcha, origin string, invisible bool) (string, error) {
 	var invisibleBit uint8
 	if invisible {
 		invisibleBit = 1
@@ -77,7 +77,7 @@ func (c *captcha) submit(origin, recaptcha string, invisible bool) (string, erro
 
 	if body == "ERROR_NO_SLOT_AVAILABLE" {
 		time.Sleep(2 * time.Second)
-		return c.submit(origin, recaptcha, invisible)
+		return c.submit(recaptcha, origin, invisible)
 	}
 
 	if body[:2] == "OK" {
